@@ -13,6 +13,11 @@ link_directories( C:/glfw-3.3.6.bin.WIN64/lib-mingw-w64 C:/glew-2.1.0/lib/Releas
 
 add_compile_definitions(GLEW_STATIC)
 
-add_executable(OpenGLCourse OpenGLCourse.cpp)
+add_executable(OpenGLCourse
+    OpenGLCourse.cpp
+    Renderer.cpp
+    VertexBuffer.cpp
+    IndexBuffer.cpp
+    )
 #target_link_libraries(OpenGLCourse PRIVATE glfw3 OpenGL::GL)
 target_link_libraries(OpenGLCourse PRIVATE glfw3 glew32s OpenGL::GL)
