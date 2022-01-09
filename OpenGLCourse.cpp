@@ -9,6 +9,7 @@
 #include "Renderer.hpp"
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
+#include "VertexArray.hpp"
 
 struct ShaderProgramSource
 {
@@ -124,9 +125,10 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    // creating scope so that the class desctructorsget call
-    // BEFORE glfwTerminate() and get stuck in constant error check loop
+    // creating scope so that the class desctructors get call
+    // BEFORE glfwTerminate() and we don't get stuck in constant error check loop
     {
+        // Data gets copied into buffer
         float positions[] = {
             -0.5f, -0.5f,
             0.5f, -0.5f,
@@ -134,21 +136,28 @@ int main(void)
             -0.5f,  0.5f,
         };
 
+        // create vertex array object because in core profile there is no default one
+        VertexArray va;
+        VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+        
+        /*
+        // this sets up the layout of the vertex buffer
+        // this line links the array buffer to the vertex array object
+        // that is currently bound (selected)
+        // first input (0) is the attribute index in that array
+        // in this case 0 will be the position attribute index
+        GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
+        GLCall(glEnableVertexAttribArray(0));
+        */
+        VertexBufferLayout layout;
+        layout.Push<float>(2);
+        va.AddBuffer(vb, layout);
+
+        // Data gets copied into buffer
         unsigned int indices[] = {
             0, 1, 2,
             2, 3, 0
         };
-
-        // create vertex array object because in core profile there is no default one
-        unsigned int vao;
-        GLCall(glGenVertexArrays(1, &vao));
-        GLCall(glBindVertexArray(vao));
-
-        VertexBuffer vb(positions, 4 * 2 * sizeof(float));
-        
-        // this line links the array buffer to the vertex array object
-        GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
-        GLCall(glEnableVertexAttribArray(0));
 
         IndexBuffer ib(indices, 6);
 
@@ -177,22 +186,16 @@ int main(void)
 
             GLCall(glUseProgram(shader));
             GLCall(glUniform4f(location, r, 0.0f, 0.0f, 1.0f));
-            GLCall(glBindVertexArray(vao));
+
+            va.Bind();
+
             ib.Bind();
+
             GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
             if (r > 1.0f || r < 0.0f) increment *= -1.0f;
             r += increment;
         
-            /*
-            glBegin(GL_TRIANGLES);
-            glColor3f(0.0f, 0.0f, 1.0f);
-            glVertex2f(-0.5f, -0.5f);
-            glVertex2f( 0.0f, 0.5f); 
-            glVertex2f( 0.5f, -0.5f); 
-            glEnd();
-            */
-
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 

@@ -17,6 +17,8 @@ add_executable(OpenGLCourse
     OpenGLCourse.cpp
     Renderer.cpp
     VertexBuffer.cpp
+    VertexArray.cpp
+    VertexBufferLayout.cpp
     IndexBuffer.cpp
     )
 #target_link_libraries(OpenGLCourse PRIVATE glfw3 OpenGL::GL)
