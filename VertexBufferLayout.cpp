@@ -5,12 +5,10 @@
 VertexBufferLayout::VertexBufferLayout()
     : m_Stride(0)
 {
-    //GLCall(glGenBuffers(1, &m_RendererID));
 }
 
 VertexBufferLayout::~VertexBufferLayout()
 {
-    //GLCall(glDeleteBuffers(1, &m_RendererID));
 }
 
 template<>

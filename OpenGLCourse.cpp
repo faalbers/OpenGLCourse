@@ -138,19 +138,16 @@ int main(void)
 
         // create vertex array object because in core profile there is no default one
         VertexArray va;
+
+        // generate and bind a vertex buffer with positions data
         VertexBuffer vb(positions, 4 * 2 * sizeof(float));
         
-        /*
         // this sets up the layout of the vertex buffer
-        // this line links the array buffer to the vertex array object
-        // that is currently bound (selected)
-        // first input (0) is the attribute index in that array
-        // in this case 0 will be the position attribute index
-        GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
-        GLCall(glEnableVertexAttribArray(0));
-        */
         VertexBufferLayout layout;
+        // 2 floats per elament
         layout.Push<float>(2);
+
+        // now we add the vertex buffer and layout to the vertex array object
         va.AddBuffer(vb, layout);
 
         // Data gets copied into buffer
